@@ -695,8 +695,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2563204318271962947, guid: f172b15064434bf4d806c52d2f6f5cbc, type: 3}
+      propertyPath: CollisionModule.m_Dampen.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2563204318271962947, guid: f172b15064434bf4d806c52d2f6f5cbc, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2563204318271962947, guid: f172b15064434bf4d806c52d2f6f5cbc, type: 3}
       propertyPath: CollisionModule.collisionMessages
