@@ -3,8 +3,21 @@ using UnityEngine.SceneManagement;
 
 public class IniciarJogo : MonoBehaviour
 {
-    public void MudarCena(string SampleScene)
+    public GameObject painelInicial;
+    public void MudarCena(string NomeDaCena)
     {
-        SceneManager.LoadScene(SampleScene);
+        SceneManager.LoadScene(NomeDaCena);
+    }
+    public void OnApplicationQuit()
+    {
+        Application.Quit();
+    }
+   public void AbrirPainel(GameObject painel)
+    {
+        painel.SetActive(true);
+    }
+    public void FecharPainel(GameObject painel)
+    {
+        painel.SetActive(false);
     }
 }
