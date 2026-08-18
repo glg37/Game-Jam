@@ -7,6 +7,9 @@ public class FireTree : MonoBehaviour
     [Header("Fogo")]
     [SerializeField] private GameObject fireEffect;
 
+    [Header("Fumaça")]
+    [SerializeField] private GameObject smokeEffect;
+
     [Header("Som")]
     [SerializeField] private AudioSource fireSound;
 
@@ -25,13 +28,9 @@ public class FireTree : MonoBehaviour
     private Coroutine extinguishCoroutine;
     private Collider myCollider;
 
-    // Quanto tempo de água já foi aplicado
     private float progressoExtincao = 0f;
-
-    // Último momento em que uma partícula de água atingiu o fogo
     private float ultimoAcertoAgua = -999f;
 
-    // Guarda os valores originais das partículas
     private ParticleSystem[] particulasFogo;
     private float[] emissaoOriginal;
 
@@ -74,6 +73,9 @@ public class FireTree : MonoBehaviour
     {
         if (fireEffect != null)
             fireEffect.SetActive(false);
+
+        if (smokeEffect != null)
+            smokeEffect.SetActive(false);
 
         IsBurning = false;
         progressoExtincao = 0f;
@@ -125,6 +127,9 @@ public class FireTree : MonoBehaviour
 
         if (fireEffect != null)
             fireEffect.SetActive(true);
+
+        if (smokeEffect != null)
+            smokeEffect.SetActive(true);
 
         // Restaura o fogo ao tamanho original
         RestaurarFogo();
@@ -215,7 +220,8 @@ public class FireTree : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float progresso = timer / tempoParaSumir;
+            float progresso =
+                timer / tempoParaSumir;
 
             if (fireSound != null)
             {
@@ -237,6 +243,9 @@ public class FireTree : MonoBehaviour
 
         if (fireEffect != null)
             fireEffect.SetActive(false);
+
+        if (smokeEffect != null)
+            smokeEffect.SetActive(false);
 
         if (fireSound != null)
         {
