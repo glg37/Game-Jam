@@ -2,36 +2,36 @@ using UnityEngine;
 
 public class CaixaAgua : MonoBehaviour
 {
-    private bool jogadorDentro = false;
-    private ArmaAgua arma;
+    private ArmaAgua armaDoJogador;
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        ArmaAgua armaEncontrada = other.GetComponentInChildren<ArmaAgua>();
+        ArmaAgua arma = other.GetComponentInChildren<ArmaAgua>();
 
-        if (armaEncontrada != null)
+        if (arma != null)
         {
-            jogadorDentro = true;
-            arma = armaEncontrada;
+            armaDoJogador = arma;
+            Debug.Log("Entrou na caixa d'água");
         }
     }
 
-    void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)
     {
-        ArmaAgua armaEncontrada = other.GetComponentInChildren<ArmaAgua>();
+        ArmaAgua arma = other.GetComponentInChildren<ArmaAgua>();
 
-        if (armaEncontrada != null)
+        if (arma != null)
         {
-            jogadorDentro = false;
-            arma = null;
+            armaDoJogador = null;
+            Debug.Log("Saiu da caixa d'água");
         }
     }
 
     void Update()
     {
-        if (jogadorDentro && Input.GetKeyDown(KeyCode.R))
+        
+        if (armaDoJogador != null && Input.GetKey(KeyCode.R))
         {
-            arma.RecarregarAgua();
+            armaDoJogador.RecarregarAgua();
         }
     }
 }
