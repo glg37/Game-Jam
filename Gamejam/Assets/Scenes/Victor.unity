@@ -145,7 +145,7 @@ MonoBehaviour:
   aguaMaxima: 100
   aguaAtual: 100
   consumoPorSegundo: 25
-  recargaPorSegundo: 4
+  recargaPorSegundo: 30
   barraAgua: {fileID: 996272831}
 --- !u!1 &105781831
 GameObject:

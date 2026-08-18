@@ -10,10 +10,10 @@ public class ArmaAgua : MonoBehaviour
     [Header("Água")]
     public float aguaMaxima = 100f;
     public float aguaAtual = 100f;
-    public float consumoPorSegundo = 25f;
+    public float consumoPorSegundo = 20f;
 
     [Header("Recarga")]
-    public float recargaPorSegundo = 30f;
+    public float recargaPorSegundo = 70f;
 
     [Header("UI")]
     public Slider barraAgua;
@@ -84,12 +84,12 @@ public class ArmaAgua : MonoBehaviour
         }
     }
 
-    
+
     public void RecarregarAgua()
     {
         aguaAtual += recargaPorSegundo * Time.deltaTime;
 
-        if (aguaAtual > aguaMaxima)
+        if (aguaAtual >= aguaMaxima)
         {
             aguaAtual = aguaMaxima;
         }
