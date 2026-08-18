@@ -32,7 +32,18 @@ public class ArmaAgua : MonoBehaviour
         if (jatoAgua != null)
         {
             particula = jatoAgua.GetComponent<ParticleSystem>();
-            jatoAgua.SetActive(false);
+
+            // Deixa o objeto ativo para que as partículas
+            // possam continuar existindo depois que o disparo parar.
+            jatoAgua.SetActive(true);
+
+            if (particula != null)
+            {
+                particula.Stop(
+                    true,
+                    ParticleSystemStopBehavior.StopEmittingAndClear
+                );
+            }
         }
     }
 
@@ -52,11 +63,9 @@ public class ArmaAgua : MonoBehaviour
 
     void AtirarAgua()
     {
-        if (jatoAgua != null)
+        if (particula != null)
         {
-            jatoAgua.SetActive(true);
-
-            if (particula != null && !particula.isPlaying)
+            if (!particula.isPlaying)
             {
                 particula.Play();
             }
@@ -73,17 +82,16 @@ public class ArmaAgua : MonoBehaviour
 
     void PararAgua()
     {
-        if (jatoAgua != null)
+        if (particula != null)
         {
-            if (particula != null)
-            {
-                particula.Stop();
-            }
-
-            jatoAgua.SetActive(false);
+            // Para SOMENTE a emissão de novas partículas.
+            // As partículas que já estão no ar continuam.
+            particula.Stop(
+                true,
+                ParticleSystemStopBehavior.StopEmitting
+            );
         }
     }
-
 
     public void RecarregarAgua()
     {
@@ -102,12 +110,6 @@ public class ArmaAgua : MonoBehaviour
         if (barraAgua != null)
         {
             barraAgua.value = aguaAtual;
-
-            Debug.Log("Água: " + aguaAtual + " | Barra: " + barraAgua.value);
-        }
-        else
-        {
-            Debug.LogError("A BarraAgua não foi atribuída!");
         }
     }
 }
