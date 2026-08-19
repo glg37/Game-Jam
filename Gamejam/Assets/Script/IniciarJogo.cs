@@ -8,8 +8,9 @@ public class IniciarJogo : MonoBehaviour
     {
         SceneManager.LoadScene(NomeDaCena);
     }
-    public void OnApplicationQuit()
+    public void SairDoJogo()
     {
+        Debug.Log("Botão Sair foi pressionado!");
         Application.Quit();
     }
    public void AbrirPainel(GameObject painel)
