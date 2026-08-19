@@ -24,7 +24,6 @@ public class FireEventManager : MonoBehaviour
 
     [Header("Derrota")]
     [SerializeField] private GameObject defeatScreen;
-
     [SerializeField] private GameObject player;
 
     private FireTree currentTree;
@@ -116,6 +115,29 @@ public class FireEventManager : MonoBehaviour
 
             yield return new WaitForSeconds(5f);
         }
+    }
+
+    public void PararIncendios()
+    {
+        if (fireRoutine != null)
+        {
+            StopCoroutine(fireRoutine);
+            fireRoutine = null;
+        }
+
+        if (musicFadeRoutine != null)
+        {
+            StopCoroutine(musicFadeRoutine);
+            musicFadeRoutine = null;
+        }
+
+        if (calmMusic != null)
+            calmMusic.Stop();
+
+        if (fireMusic != null)
+            fireMusic.Stop();
+
+        Debug.Log("Incêndios encerrados: turno finalizado.");
     }
 
     private void StartMusicTransition(bool fire)

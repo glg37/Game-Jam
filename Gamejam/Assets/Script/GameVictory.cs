@@ -12,7 +12,7 @@ public class GameVictory : MonoBehaviour
     [Header("Relógio")]
     [SerializeField] private int horaInicial = 17;
     [SerializeField] private int horaFinal = 22;
-    [SerializeField] private TMP_Text textoRelogio;
+    [SerializeField] private GameObject textoRelogio;
 
     [Header("Fade do Relógio")]
     [SerializeField] private float tempoParaSumirRelogio = 10f;
@@ -22,6 +22,9 @@ public class GameVictory : MonoBehaviour
     [SerializeField] private GameObject textoVitoria;
     [SerializeField] private float tempoParaSumirVitoria = 10f;
     [SerializeField] private float duracaoFadeVitoria = 2f;
+
+    [Header("Incêndios")]
+    [SerializeField] private FireEventManager fireEventManager;
 
     [Header("Collider da Cabana")]
     [SerializeField] private Collider colliderCabana;
@@ -43,6 +46,8 @@ public class GameVictory : MonoBehaviour
     private CanvasGroup grupoVitoria;
     private CanvasGroup grupoTelaPreta;
 
+    private TMP_Text textoRelogioTMP;
+
     private void Start()
     {
         horaAtual = horaInicial;
@@ -50,16 +55,20 @@ public class GameVictory : MonoBehaviour
         // RELÓGIO
         if (textoRelogio != null)
         {
+            textoRelogioTMP =
+                textoRelogio.GetComponentInChildren<TMP_Text>();
+
             grupoRelogio =
                 textoRelogio.GetComponent<CanvasGroup>();
 
             if (grupoRelogio == null)
             {
                 grupoRelogio =
-                    textoRelogio.gameObject.AddComponent<CanvasGroup>();
+                    textoRelogio.AddComponent<CanvasGroup>();
             }
 
             grupoRelogio.alpha = 1f;
+            textoRelogio.SetActive(true);
         }
 
         // TEXTO DE VITÓRIA
@@ -137,10 +146,10 @@ public class GameVictory : MonoBehaviour
 
     private void AtualizarRelogio()
     {
-        if (textoRelogio == null)
+        if (textoRelogioTMP == null)
             return;
 
-        textoRelogio.text =
+        textoRelogioTMP.text =
             horaAtual.ToString("00") + ":00";
     }
 
@@ -152,6 +161,11 @@ public class GameVictory : MonoBehaviour
 
         Debug.Log("O jogador sobreviveu até às 22:00!");
 
+        // PARA NOVOS INCÊNDIOS E MÚSICAS
+        if (fireEventManager != null)
+            fireEventManager.PararIncendios();
+
+        // TEXTO DE VITÓRIA
         if (textoVitoria != null)
         {
             textoVitoria.SetActive(true);
@@ -160,6 +174,7 @@ public class GameVictory : MonoBehaviour
                 grupoVitoria.alpha = 1f;
         }
 
+        // LIBERA A CABANA
         if (colliderCabana != null)
             colliderCabana.enabled = true;
 
@@ -192,6 +207,7 @@ public class GameVictory : MonoBehaviour
         }
 
         grupoRelogio.alpha = 0f;
+        textoRelogio.SetActive(false);
     }
 
     private IEnumerator FadeTextoVitoria()
