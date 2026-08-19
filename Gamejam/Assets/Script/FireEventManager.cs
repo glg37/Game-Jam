@@ -14,8 +14,13 @@ public class FireEventManager : MonoBehaviour
     [Header("Tempo para apagar")]
     [SerializeField] private float timeToExtinguish = 30f;
 
-    [Header("Música")]
+    [Header("Músicas")]
+    [SerializeField] private AudioSource calmMusic;
     [SerializeField] private AudioSource fireMusic;
+
+    [SerializeField] private float calmVolume = 0.5f;
+    [SerializeField] private float fireVolume = 0.7f;
+    [SerializeField] private float fadeDuration = 2f;
 
     [Header("Derrota")]
     [SerializeField] private GameObject defeatScreen;
@@ -25,13 +30,30 @@ public class FireEventManager : MonoBehaviour
     private FireTree currentTree;
     private Coroutine fireRoutine;
 
-    // Árvores que já pegaram fogo
     private List<FireTree> treesAlreadyUsed = new List<FireTree>();
+
+    private Coroutine musicFadeRoutine;
 
     private void Start()
     {
         if (defeatScreen != null)
             defeatScreen.SetActive(false);
+
+        // Música calma começa tocando
+        if (calmMusic != null)
+        {
+            calmMusic.volume = calmVolume;
+            calmMusic.loop = true;
+            calmMusic.Play();
+        }
+
+        // Música de incêndio começa desligada
+        if (fireMusic != null)
+        {
+            fireMusic.volume = 0f;
+            fireMusic.loop = true;
+            fireMusic.Stop();
+        }
 
         fireRoutine = StartCoroutine(FireCycle());
     }
@@ -40,7 +62,6 @@ public class FireEventManager : MonoBehaviour
     {
         while (true)
         {
-            // Espera antes do próximo incêndio
             float waitTime = Random.Range(
                 minTimeUntilFire,
                 maxTimeUntilFire
@@ -48,21 +69,16 @@ public class FireEventManager : MonoBehaviour
 
             yield return new WaitForSeconds(waitTime);
 
-            // Escolhe uma árvore que ainda não foi usada
             currentTree = GetRandomUnusedTree();
 
-            // Se não houver mais árvores
             if (currentTree == null)
             {
                 Debug.Log("Todas as árvores já pegaram fogo!");
-
                 yield break;
             }
 
-            // Registra a árvore como usada
             treesAlreadyUsed.Add(currentTree);
 
-            // Inicia o incêndio
             currentTree.StartFire();
 
             Debug.Log(
@@ -70,20 +86,17 @@ public class FireEventManager : MonoBehaviour
                 currentTree.gameObject.name
             );
 
-            // Música
-            if (fireMusic != null)
-                fireMusic.Play();
+            // Troca para música frenética
+            StartMusicTransition(true);
 
-            // Tempo para o jogador apagar
             float timer = timeToExtinguish;
 
             while (timer > 0f)
             {
-                // Jogador apagou
                 if (!currentTree.IsBurning)
                 {
-                    if (fireMusic != null)
-                        fireMusic.Stop();
+                    // Volta para música calma
+                    StartMusicTransition(false);
 
                     break;
                 }
@@ -93,7 +106,6 @@ public class FireEventManager : MonoBehaviour
                 yield return null;
             }
 
-            // Se o tempo acabou e ainda está queimando
             if (currentTree != null &&
                 currentTree.IsBurning)
             {
@@ -102,8 +114,85 @@ public class FireEventManager : MonoBehaviour
                 yield break;
             }
 
-            // Intervalo antes do próximo incêndio
             yield return new WaitForSeconds(5f);
+        }
+    }
+
+    private void StartMusicTransition(bool fire)
+    {
+        if (musicFadeRoutine != null)
+            StopCoroutine(musicFadeRoutine);
+
+        musicFadeRoutine = StartCoroutine(
+            CrossFadeMusic(fire)
+        );
+    }
+
+    private IEnumerator CrossFadeMusic(bool fire)
+    {
+        float startCalmVolume =
+            calmMusic != null ? calmMusic.volume : 0f;
+
+        float startFireVolume =
+            fireMusic != null ? fireMusic.volume : 0f;
+
+        if (fire && fireMusic != null &&
+            !fireMusic.isPlaying)
+        {
+            fireMusic.volume = 0f;
+            fireMusic.Play();
+        }
+
+        float timer = 0f;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / fadeDuration;
+
+            if (calmMusic != null)
+            {
+                float targetCalm =
+                    fire ? 0f : calmVolume;
+
+                calmMusic.volume =
+                    Mathf.Lerp(
+                        startCalmVolume,
+                        targetCalm,
+                        t
+                    );
+            }
+
+            if (fireMusic != null)
+            {
+                float targetFire =
+                    fire ? fireVolume : 0f;
+
+                fireMusic.volume =
+                    Mathf.Lerp(
+                        startFireVolume,
+                        targetFire,
+                        t
+                    );
+            }
+
+            yield return null;
+        }
+
+        if (calmMusic != null)
+        {
+            calmMusic.volume =
+                fire ? 0f : calmVolume;
+        }
+
+        if (fireMusic != null)
+        {
+            fireMusic.volume =
+                fire ? fireVolume : 0f;
+
+            if (!fire)
+                fireMusic.Stop();
         }
     }
 
@@ -112,7 +201,6 @@ public class FireEventManager : MonoBehaviour
         if (trees == null || trees.Length == 0)
             return null;
 
-        // Cria uma lista somente com árvores ainda não usadas
         List<FireTree> availableTrees =
             new List<FireTree>();
 
@@ -125,11 +213,9 @@ public class FireEventManager : MonoBehaviour
             }
         }
 
-        // Nenhuma disponível
         if (availableTrees.Count == 0)
             return null;
 
-        // Escolhe aleatoriamente
         int index =
             Random.Range(0, availableTrees.Count);
 
@@ -142,13 +228,18 @@ public class FireEventManager : MonoBehaviour
             "O jogador não conseguiu apagar o incêndio!"
         );
 
+        if (musicFadeRoutine != null)
+            StopCoroutine(musicFadeRoutine);
+
+        if (calmMusic != null)
+            calmMusic.Stop();
+
         if (fireMusic != null)
             fireMusic.Stop();
 
         if (defeatScreen != null)
             defeatScreen.SetActive(true);
 
-        // Desativa todos os scripts do Player
         if (player != null)
         {
             MonoBehaviour[] playerScripts =
