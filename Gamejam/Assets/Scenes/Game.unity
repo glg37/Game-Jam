@@ -7112,7 +7112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ebf4cea96c4c3b4aa3b4f86d565ce54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameVictory
-  segundosPorHora: 1
+  segundosPorHora: 60
   horaInicial: 17
   horaFinal: 22
   textoRelogio: {fileID: 1323584766}
