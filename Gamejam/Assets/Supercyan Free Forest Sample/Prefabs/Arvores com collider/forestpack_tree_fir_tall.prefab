@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 8816757541263776048}
   - component: {fileID: 7416323249228823652}
   - component: {fileID: 606123769938048511}
-  - component: {fileID: 8595237606002683555}
-  - component: {fileID: 7681289539310654436}
-  m_Layer: 4
+  - component: {fileID: 8929522487804176481}
+  m_Layer: 3
   m_Name: forestpack_tree_fir_tall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,26 +110,8 @@ LODGroup:
     renderers:
     - renderer: {fileID: 7416323249228823652}
   m_Enabled: 1
---- !u!114 &8595237606002683555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 55795381414780640}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Outline
-  outlineMode: 4
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 10
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
---- !u!65 &7681289539310654436
-BoxCollider:
+--- !u!136 &8929522487804176481
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -147,6 +128,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.8064499, y: 3.5331335, z: 1.0858154}
-  m_Center: {x: 0.12031937, y: 1.6552377, z: 0.029556274}
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Height: 3.5994308
+  m_Direction: 1
+  m_Center: {x: 0.03999999, y: 1.622089, z: -0.00999999}
