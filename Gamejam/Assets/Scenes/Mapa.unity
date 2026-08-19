@@ -1866,15 +1866,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ebf4cea96c4c3b4aa3b4f86d565ce54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameVictory
-  segundosPorHora: 1
+  segundosPorHora: 60
   horaInicial: 17
   horaFinal: 22
   textoRelogio: {fileID: 295979830}
   tempoParaSumirRelogio: 6
-  duracaoFadeRelogio: 2
+  duracaoFadeRelogio: 1.5
   textoVitoria: {fileID: 2073268270}
   tempoParaSumirVitoria: 10
-  duracaoFadeVitoria: 2
+  duracaoFadeVitoria: 1.5
   colliderCabana: {fileID: 1353657018}
   telaPreta: {fileID: 15148279}
   tempoFade: 2
@@ -2497,7 +2497,7 @@ GameObject:
   - component: {fileID: 1353657018}
   - component: {fileID: 1353657022}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Cabana
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
