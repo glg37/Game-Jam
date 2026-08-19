@@ -20,4 +20,9 @@ public class IniciarJogo : MonoBehaviour
     {
         painel.SetActive(false);
     }
+
+    public void ReiniciarJogo()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }
