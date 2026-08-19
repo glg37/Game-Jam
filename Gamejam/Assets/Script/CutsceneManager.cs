@@ -8,12 +8,14 @@ public class CutsceneManager : MonoBehaviour
     [Header("Animação")]
     [SerializeField] private Animator animator;
     [SerializeField] private string animationStateName = "Cutscene";
+    [SerializeField] private float animationDuration = 5f;
 
     [Header("Tela Preta")]
     [SerializeField] private Image blackScreen;
 
     [Header("Quadrinho")]
     [SerializeField] private GameObject comicImage;
+    [SerializeField] private CanvasGroup comicCanvasGroup;
 
     [Header("Narração")]
     [SerializeField] private AudioSource narration;
@@ -23,13 +25,14 @@ public class CutsceneManager : MonoBehaviour
 
     [Header("Fades")]
     [SerializeField] private float fadeDuration = 1.5f;
+    [SerializeField] private float comicFadeDuration = 1.5f;
 
     private void Start()
     {
         // Começa completamente preto
         SetBlackScreen(1f);
 
-        // Quadrinho começa escondido
+        // Quadrinho começa desligado
         if (comicImage != null)
             comicImage.SetActive(false);
 
@@ -38,94 +41,81 @@ public class CutsceneManager : MonoBehaviour
 
     private IEnumerator CutsceneSequence()
     {
-        Debug.Log("Cutscene começou.");
+        // =========================================
+        // 1. FADE OUT INICIAL
+        // =========================================
 
-        // 1. Fade inicial: preto -> transparente
-        Debug.Log("Iniciando fade inicial...");
-        yield return StartCoroutine(FadeBlack(1f, 0f));
+        yield return StartCoroutine(
+            FadeBlack(1f, 0f)
+        );
 
-        // 2. Começa a animação
+        // =========================================
+        // 2. COMEÇA A ANIMAÇÃO
+        // =========================================
+
         if (animator != null)
         {
-            Debug.Log("Iniciando animação...");
-
             animator.Play(animationStateName);
 
-            yield return StartCoroutine(WaitForAnimation());
-
-            Debug.Log("ANIMAÇÃO TERMINOU!");
+            yield return new WaitForSeconds(animationDuration);
         }
 
-        // 3. Fade para preto
-        Debug.Log("INICIANDO FADE PARA PRETO!");
+        // =========================================
+        // 3. FADE PARA PRETO
+        // =========================================
 
-        yield return StartCoroutine(FadeBlack(0f, 1f));
+        yield return StartCoroutine(
+            FadeBlack(0f, 1f)
+        );
 
-        Debug.Log("FADE PARA PRETO TERMINOU!");
+        // =========================================
+        // 4. MOSTRA O QUADRINHO
+        // =========================================
 
-        // 4. Mostra o quadrinho
         if (comicImage != null)
-        {
             comicImage.SetActive(true);
-            Debug.Log("Quadrinho ativado.");
-        }
 
-        // 5. Começa narração
+        if (comicCanvasGroup != null)
+            comicCanvasGroup.alpha = 1f;
+
+        // =========================================
+        // 5. COMEÇA A NARRAÇÃO
+        // =========================================
+
         if (narration != null && narration.clip != null)
         {
-            Debug.Log("Começando narração...");
-
             narration.Play();
 
             yield return new WaitWhile(
                 () => narration.isPlaying
             );
-
-            Debug.Log("Narração terminou.");
         }
 
-        // 6. Esconde quadrinho
+        // =========================================
+        // 6. FADE-OUT DO QUADRINHO
+        // =========================================
+
+        if (comicCanvasGroup != null)
+        {
+            yield return StartCoroutine(
+                FadeComic(1f, 0f)
+            );
+        }
+
+        // =========================================
+        // 7. DESATIVA O QUADRINHO
+        // =========================================
+
         if (comicImage != null)
             comicImage.SetActive(false);
 
-        // 7. Fade final
-        Debug.Log("Iniciando fade final...");
+        // =========================================
+        // 8. MUDA DE CENA
+        // =========================================
 
-        yield return StartCoroutine(FadeBlack(0f, 1f));
-
-        Debug.Log("Fade final terminou.");
-
-        // 8. Próxima cena
         if (!string.IsNullOrEmpty(nextSceneName))
         {
             SceneManager.LoadScene(nextSceneName);
-        }
-    }
-
-    private IEnumerator WaitForAnimation()
-    {
-        // Espera o Animator entrar no estado
-        yield return null;
-
-        AnimatorStateInfo stateInfo =
-            animator.GetCurrentAnimatorStateInfo(0);
-
-        // Espera até o estado correto começar
-        while (!stateInfo.IsName(animationStateName))
-        {
-            yield return null;
-
-            stateInfo =
-                animator.GetCurrentAnimatorStateInfo(0);
-        }
-
-        // Espera a animação terminar
-        while (stateInfo.normalizedTime < 1f)
-        {
-            yield return null;
-
-            stateInfo =
-                animator.GetCurrentAnimatorStateInfo(0);
         }
     }
 
@@ -147,6 +137,25 @@ public class CutsceneManager : MonoBehaviour
         }
 
         SetBlackScreen(endAlpha);
+    }
+
+    private IEnumerator FadeComic(float startAlpha, float endAlpha)
+    {
+        float timer = 0f;
+
+        while (timer < comicFadeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / comicFadeDuration;
+
+            comicCanvasGroup.alpha =
+                Mathf.Lerp(startAlpha, endAlpha, t);
+
+            yield return null;
+        }
+
+        comicCanvasGroup.alpha = endAlpha;
     }
 
     private void SetBlackScreen(float alpha)
