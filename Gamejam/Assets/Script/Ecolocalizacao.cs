@@ -13,6 +13,9 @@ public class Ecolocalizacao : MonoBehaviour
     [Header("Objetos normais")]
     [SerializeField] private LayerMask objetosDetectaveis;
 
+    [Header("Torre guia")]
+    [SerializeField] private Outline outlineTorre;
+
     [Header("Terrains")]
     [SerializeField] private Terrain[] terrains;
 
@@ -34,7 +37,6 @@ public class Ecolocalizacao : MonoBehaviour
 
     private List<Outline> outlinesAtivos = new List<Outline>();
 
-
     private List<GameObject> arvoresTemporarias =
         new List<GameObject>();
 
@@ -49,6 +51,11 @@ public class Ecolocalizacao : MonoBehaviour
     private IEnumerator AtivarEcolocalizacao()
     {
         podeUsar = false;
+
+        if (outlineTorre != null)
+        {
+            AtivarOutline(outlineTorre);
+        }
 
         if (somBengala != null)
         {
@@ -69,10 +76,8 @@ public class Ecolocalizacao : MonoBehaviour
                 progresso
             );
 
-        
             DetectarObjetos(raioAtual);
 
-            
             DetectarArvoresTerrain(raioAtual);
 
             yield return null;
@@ -81,12 +86,15 @@ public class Ecolocalizacao : MonoBehaviour
         DesativarTodosOutlines();
         DestruirArvoresTemporarias();
 
+        if (outlineTorre != null)
+        {
+            outlineTorre.enabled = false;
+        }
+
         yield return new WaitForSeconds(tempoRecarga);
 
         podeUsar = true;
     }
-
-    
 
     private void DetectarObjetos(float raio)
     {
@@ -151,8 +159,6 @@ public class Ecolocalizacao : MonoBehaviour
         outline.enabled = true;
     }
 
-    
-
     private void DetectarArvoresTerrain(float raio)
     {
         if (terrains == null)
@@ -174,8 +180,6 @@ public class Ecolocalizacao : MonoBehaviour
             {
                 TreeInstance arvore = arvores[i];
 
-               
-              
                 Vector3 posicaoMundo =
                     terrain.transform.TransformPoint(
                         Vector3.Scale(
@@ -190,7 +194,6 @@ public class Ecolocalizacao : MonoBehaviour
                         posicaoMundo
                     );
 
-               
                 if (distancia <= raio)
                 {
                     CriarOutlineArvore(
@@ -227,7 +230,6 @@ public class Ecolocalizacao : MonoBehaviour
         if (prefab == null)
             return;
 
-        
         string nomeArvore =
             "ECO_TREE_" +
             terrain.GetInstanceID() +
@@ -254,7 +256,6 @@ public class Ecolocalizacao : MonoBehaviour
 
         arvoreTemporaria.name = nomeArvore;
 
-        
         arvoreTemporaria.transform.localScale =
             new Vector3(
                 arvore.widthScale,
@@ -262,7 +263,6 @@ public class Ecolocalizacao : MonoBehaviour
                 arvore.widthScale
             );
 
-        
         Outline outline =
             arvoreTemporaria.GetComponent<Outline>();
 
@@ -306,8 +306,6 @@ public class Ecolocalizacao : MonoBehaviour
 
         return Color.white;
     }
-
-  
 
     private void DesativarTodosOutlines()
     {
