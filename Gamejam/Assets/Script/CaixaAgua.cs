@@ -2,46 +2,49 @@ using UnityEngine;
 
 public class CaixaAgua : MonoBehaviour
 {
-    private ArmaAgua armaDoJogador;
+    [Header("Intera√ß√£o")]
+    [SerializeField] private float distanciaInteracao = 3f;
+    [SerializeField] private Camera cameraJogador;
 
     [Header("Mensagem na tela")]
     [SerializeField] private GameObject mensagemRecarregar;
 
-    private void OnTriggerEnter(Collider other)
+    private ArmaAgua armaDoJogador;
+
+    private void Start()
     {
-        ArmaAgua arma = other.GetComponentInChildren<ArmaAgua>();
+        mensagemRecarregar.SetActive(false);
 
-        if (arma != null)
-        {
-            armaDoJogador = arma;
-
-            // Mostra a mensagem
-            mensagemRecarregar.SetActive(true);
-
-            Debug.Log("Entrou na caixa d'·gua");
-        }
+        armaDoJogador = FindFirstObjectByType<ArmaAgua>();
     }
 
-    private void OnTriggerExit(Collider other)
+    private void Update()
     {
-        ArmaAgua arma = other.GetComponentInChildren<ArmaAgua>();
+        VerificarOlhar();
 
-        if (arma != null)
-        {
-            armaDoJogador = null;
-
-            // Esconde a mensagem
-            mensagemRecarregar.SetActive(false);
-
-            Debug.Log("Saiu da caixa d'·gua");
-        }
-    }
-
-    void Update()
-    {
         if (armaDoJogador != null && Input.GetKey(KeyCode.R))
         {
             armaDoJogador.RecarregarAgua();
         }
+    }
+
+    private void VerificarOlhar()
+    {
+        Ray ray = new Ray(
+            cameraJogador.transform.position,
+            cameraJogador.transform.forward
+        );
+
+        if (Physics.Raycast(ray, out RaycastHit hit, distanciaInteracao))
+        {
+            if (hit.collider.transform.IsChildOf(transform) ||
+                hit.collider.gameObject == gameObject)
+            {
+                mensagemRecarregar.SetActive(true);
+                return;
+            }
+        }
+
+        mensagemRecarregar.SetActive(false);
     }
 }
