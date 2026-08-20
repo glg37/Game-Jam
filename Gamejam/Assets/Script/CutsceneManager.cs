@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class CutsceneManager : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private string animationStateName = "Cutscene";
     [SerializeField] private float animationDuration = 5f;
+
+    [Header("Som da Animação")]
+    [SerializeField] private AudioSource animationSound;
 
     [Header("Tela Preta")]
     [SerializeField] private Image blackScreen;
@@ -29,6 +33,10 @@ public class CutsceneManager : MonoBehaviour
     [SerializeField] private float controlsFadeDuration = 1.5f;
     [SerializeField] private float controlsFadeOutDuration = 1.5f;
 
+    [Header("Pular Cutscene")]
+    [SerializeField] private TextMeshProUGUI skipText;
+    [SerializeField] private float skipFadeDuration = 1f;
+
     [Header("Próxima Cena")]
     [SerializeField] private string nextSceneName;
 
@@ -38,6 +46,9 @@ public class CutsceneManager : MonoBehaviour
 
     [Header("Fade do Quadrinho")]
     [SerializeField] private float comicFadeDuration = 1.5f;
+
+    private bool cutsceneFinished = false;
+    private bool isSkipping = false;
 
     private void Start()
     {
@@ -52,41 +63,50 @@ public class CutsceneManager : MonoBehaviour
         if (controlsCanvasGroup != null)
             controlsCanvasGroup.alpha = 0f;
 
+        if (skipText != null)
+            skipText.alpha = 1f;
+
+        if (animationSound != null)
+        {
+            animationSound.playOnAwake = false;
+            animationSound.Stop();
+            animationSound.Play();
+        }
+
         StartCoroutine(CutsceneSequence());
+    }
+
+    private void Update()
+    {
+        if (cutsceneFinished || isSkipping)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            StartCoroutine(SkipCutscene());
     }
 
     private IEnumerator CutsceneSequence()
     {
-        // ==========================================
-        // FADE-IN INICIAL
-        // ==========================================
-
         yield return StartCoroutine(
             FadeBlack(1f, 0f, fadeInDuration)
         );
 
-        // ==========================================
-        // ANIMAÇÃO
-        // ==========================================
+        if (isSkipping)
+            yield break;
 
         if (animator != null)
-        {
             animator.Play(animationStateName);
 
-            yield return new WaitForSeconds(animationDuration);
-        }
-
-        // ==========================================
-        // TELA PRETA ANTES DO QUADRINHO
-        // ==========================================
-
-        yield return StartCoroutine(
-            FadeBlack(0f, 1f, fadeToBlackDuration)
+        yield return new WaitForSeconds(
+            animationDuration
         );
 
-        // ==========================================
-        // MOSTRA QUADRINHO
-        // ==========================================
+        if (isSkipping)
+            yield break;
+
+        yield return StartCoroutine(
+            FadeAnimationAndBlack()
+        );
 
         if (comicImage != null)
             comicImage.SetActive(true);
@@ -94,52 +114,37 @@ public class CutsceneManager : MonoBehaviour
         if (comicCanvasGroup != null)
             comicCanvasGroup.alpha = 1f;
 
-        // ==========================================
-        // NARRAÇÃO DO QUADRINHO
-        // ==========================================
-
-        if (narration != null && narration.clip != null)
+        if (narration != null &&
+            narration.clip != null)
         {
             narration.Play();
 
-            // Espera a duração REAL do áudio
             yield return new WaitForSeconds(
                 narration.clip.length
             );
 
-            // Garante que o áudio terminou
             narration.Stop();
         }
-
-        // ==========================================
-        // AGORA SIM: FADE DO QUADRINHO
-        // ==========================================
 
         if (comicCanvasGroup != null)
         {
             yield return StartCoroutine(
-                FadeComic(1f, 0f)
+                FadeComicAndNarration()
             );
         }
 
         if (comicImage != null)
             comicImage.SetActive(false);
 
-        // ==========================================
-        // CONTROLES
-        // ==========================================
-
         if (controlsText != null)
             controlsText.SetActive(true);
 
-        // Começa a narração dos controles
         if (controlsNarration != null &&
             controlsNarration.clip != null)
         {
             controlsNarration.Play();
         }
 
-        // Fade-in dos controles
         if (controlsCanvasGroup != null)
         {
             yield return StartCoroutine(
@@ -151,9 +156,8 @@ public class CutsceneManager : MonoBehaviour
             );
         }
 
-        // ==========================================
-        // ESPERA NARRAÇÃO DOS CONTROLES
-        // ==========================================
+        if (isSkipping)
+            yield break;
 
         if (controlsNarration != null &&
             controlsNarration.clip != null)
@@ -164,10 +168,6 @@ public class CutsceneManager : MonoBehaviour
 
             controlsNarration.Stop();
         }
-
-        // ==========================================
-        // FADE-OUT DOS CONTROLES
-        // ==========================================
 
         if (controlsCanvasGroup != null)
         {
@@ -183,14 +183,226 @@ public class CutsceneManager : MonoBehaviour
         if (controlsText != null)
             controlsText.SetActive(false);
 
-        // ==========================================
-        // PRÓXIMA CENA
-        // ==========================================
+        LoadNextScene();
+    }
 
-        if (!string.IsNullOrEmpty(nextSceneName))
+    private IEnumerator FadeAnimationAndBlack()
+    {
+        float timer = 0f;
+
+        float soundStartVolume =
+            animationSound != null
+                ? animationSound.volume
+                : 0f;
+
+        while (timer < fadeToBlackDuration)
         {
-            SceneManager.LoadScene(nextSceneName);
+            timer += Time.deltaTime;
+
+            float t = Mathf.Clamp01(
+                timer / fadeToBlackDuration
+            );
+
+            SetBlackScreen(
+                Mathf.Lerp(
+                    0f,
+                    1f,
+                    t
+                )
+            );
+
+            if (animationSound != null)
+            {
+                animationSound.volume =
+                    Mathf.Lerp(
+                        soundStartVolume,
+                        0f,
+                        t
+                    );
+            }
+
+            yield return null;
         }
+
+        SetBlackScreen(1f);
+
+        if (animationSound != null)
+        {
+            animationSound.Stop();
+            animationSound.volume = soundStartVolume;
+        }
+    }
+
+    private IEnumerator FadeComicAndNarration()
+    {
+        float timer = 0f;
+
+        float narrationStartVolume =
+            narration != null
+                ? narration.volume
+                : 0f;
+
+        while (timer < comicFadeDuration)
+        {
+            timer += Time.deltaTime;
+
+            float t = Mathf.Clamp01(
+                timer / comicFadeDuration
+            );
+
+            comicCanvasGroup.alpha =
+                Mathf.Lerp(
+                    1f,
+                    0f,
+                    t
+                );
+
+            if (narration != null)
+            {
+                narration.volume =
+                    Mathf.Lerp(
+                        narrationStartVolume,
+                        0f,
+                        t
+                    );
+            }
+
+            yield return null;
+        }
+
+        comicCanvasGroup.alpha = 0f;
+
+        if (narration != null)
+        {
+            narration.Stop();
+            narration.volume = narrationStartVolume;
+        }
+    }
+
+    private IEnumerator SkipCutscene()
+    {
+        isSkipping = true;
+
+        if (animationSound != null &&
+            animationSound.isPlaying)
+        {
+            yield return StartCoroutine(
+                FadeAudio(
+                    animationSound,
+                    skipFadeDuration
+                )
+            );
+        }
+
+        if (narration != null &&
+            narration.isPlaying)
+        {
+            yield return StartCoroutine(
+                FadeAudio(
+                    narration,
+                    skipFadeDuration
+                )
+            );
+        }
+
+        if (controlsNarration != null &&
+            controlsNarration.isPlaying)
+        {
+            yield return StartCoroutine(
+                FadeAudio(
+                    controlsNarration,
+                    skipFadeDuration
+                )
+            );
+        }
+
+        if (comicCanvasGroup != null &&
+            comicImage != null &&
+            comicImage.activeSelf)
+        {
+            yield return StartCoroutine(
+                FadeComic(
+                    1f,
+                    0f
+                )
+            );
+        }
+
+        if (comicImage != null)
+            comicImage.SetActive(false);
+
+        if (controlsCanvasGroup != null &&
+            controlsText != null &&
+            controlsText.activeSelf)
+        {
+            yield return StartCoroutine(
+                FadeControls(
+                    controlsCanvasGroup.alpha,
+                    0f,
+                    skipFadeDuration
+                )
+            );
+        }
+
+        if (controlsText != null)
+            controlsText.SetActive(false);
+
+        if (skipText != null)
+        {
+            float timer = 0f;
+            float startAlpha = skipText.alpha;
+
+            while (timer < skipFadeDuration)
+            {
+                timer += Time.deltaTime;
+
+                float t = Mathf.Clamp01(
+                    timer / skipFadeDuration
+                );
+
+                skipText.alpha =
+                    Mathf.Lerp(
+                        startAlpha,
+                        0f,
+                        t
+                    );
+
+                yield return null;
+            }
+
+            skipText.alpha = 0f;
+        }
+
+        LoadNextScene();
+    }
+
+    private IEnumerator FadeAudio(
+        AudioSource audio,
+        float duration)
+    {
+        float timer = 0f;
+        float startVolume = audio.volume;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = Mathf.Clamp01(
+                timer / duration
+            );
+
+            audio.volume =
+                Mathf.Lerp(
+                    startVolume,
+                    0f,
+                    t
+                );
+
+            yield return null;
+        }
+
+        audio.Stop();
+        audio.volume = startVolume;
     }
 
     private IEnumerator FadeBlack(
@@ -204,7 +416,9 @@ public class CutsceneManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float t = timer / duration;
+            float t = Mathf.Clamp01(
+                timer / duration
+            );
 
             SetBlackScreen(
                 Mathf.Lerp(
@@ -230,8 +444,9 @@ public class CutsceneManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float t =
-                timer / comicFadeDuration;
+            float t = Mathf.Clamp01(
+                timer / comicFadeDuration
+            );
 
             comicCanvasGroup.alpha =
                 Mathf.Lerp(
@@ -257,8 +472,9 @@ public class CutsceneManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float t =
-                timer / duration;
+            float t = Mathf.Clamp01(
+                timer / duration
+            );
 
             controlsCanvasGroup.alpha =
                 Mathf.Lerp(
@@ -271,6 +487,17 @@ public class CutsceneManager : MonoBehaviour
         }
 
         controlsCanvasGroup.alpha = endAlpha;
+    }
+
+    private void LoadNextScene()
+    {
+        if (cutsceneFinished)
+            return;
+
+        cutsceneFinished = true;
+
+        if (!string.IsNullOrEmpty(nextSceneName))
+            SceneManager.LoadScene(nextSceneName);
     }
 
     private void SetBlackScreen(float alpha)
