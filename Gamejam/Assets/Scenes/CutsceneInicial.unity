@@ -749,7 +749,7 @@ MonoBehaviour:
   controlsCanvasGroup: {fileID: 369909735}
   controlsNarration: {fileID: 521756308}
   controlsFadeDuration: 2
-  controlsFadeOutDuration: 2
+  controlsFadeOutDuration: 1
   nextSceneName: Game
   fadeInDuration: 2
   fadeToBlackDuration: 2
@@ -1117,9 +1117,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: a71cab3dd298d104f851c2a5234a4eb8, type: 3}
+  m_Resource: {fileID: 8300000, guid: aba75cdaeba3bf744bf6c1c057054a7c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -2103,9 +2103,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 39eb5d559e91fa74cb2ed1eca8520255, type: 3}
+  m_Resource: {fileID: 8300000, guid: 384829d7506bccd4b9a321734627072e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0

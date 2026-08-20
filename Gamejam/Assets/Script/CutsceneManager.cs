@@ -58,7 +58,7 @@ public class CutsceneManager : MonoBehaviour
     private IEnumerator CutsceneSequence()
     {
         // ==========================================
-        // FADE-OUT DA TELA PRETA NO INÍCIO
+        // FADE-IN INICIAL
         // ==========================================
 
         yield return StartCoroutine(
@@ -85,7 +85,7 @@ public class CutsceneManager : MonoBehaviour
         );
 
         // ==========================================
-        // MOSTRA O QUADRINHO
+        // MOSTRA QUADRINHO
         // ==========================================
 
         if (comicImage != null)
@@ -102,13 +102,17 @@ public class CutsceneManager : MonoBehaviour
         {
             narration.Play();
 
-            yield return new WaitWhile(
-                () => narration.isPlaying
+            // Espera a duração REAL do áudio
+            yield return new WaitForSeconds(
+                narration.clip.length
             );
+
+            // Garante que o áudio terminou
+            narration.Stop();
         }
 
         // ==========================================
-        // FADE-OUT DO QUADRINHO
+        // AGORA SIM: FADE DO QUADRINHO
         // ==========================================
 
         if (comicCanvasGroup != null)
@@ -122,33 +126,43 @@ public class CutsceneManager : MonoBehaviour
             comicImage.SetActive(false);
 
         // ==========================================
-        // TEXTO DOS CONTROLES
+        // CONTROLES
         // ==========================================
 
         if (controlsText != null)
             controlsText.SetActive(true);
 
-        // Começa a narração
-        if (controlsNarration != null && controlsNarration.clip != null)
+        // Começa a narração dos controles
+        if (controlsNarration != null &&
+            controlsNarration.clip != null)
+        {
             controlsNarration.Play();
+        }
 
-        // Fade-in do texto
+        // Fade-in dos controles
         if (controlsCanvasGroup != null)
         {
             yield return StartCoroutine(
-                FadeControls(0f, 1f, controlsFadeDuration)
+                FadeControls(
+                    0f,
+                    1f,
+                    controlsFadeDuration
+                )
             );
         }
 
         // ==========================================
-        // ESPERA A NARRAÇÃO TERMINAR
+        // ESPERA NARRAÇÃO DOS CONTROLES
         // ==========================================
 
-        if (controlsNarration != null && controlsNarration.clip != null)
+        if (controlsNarration != null &&
+            controlsNarration.clip != null)
         {
-            yield return new WaitWhile(
-                () => controlsNarration.isPlaying
+            yield return new WaitForSeconds(
+                controlsNarration.clip.length
             );
+
+            controlsNarration.Stop();
         }
 
         // ==========================================
@@ -158,7 +172,11 @@ public class CutsceneManager : MonoBehaviour
         if (controlsCanvasGroup != null)
         {
             yield return StartCoroutine(
-                FadeControls(1f, 0f, controlsFadeOutDuration)
+                FadeControls(
+                    1f,
+                    0f,
+                    controlsFadeOutDuration
+                )
             );
         }
 
@@ -189,7 +207,11 @@ public class CutsceneManager : MonoBehaviour
             float t = timer / duration;
 
             SetBlackScreen(
-                Mathf.Lerp(startAlpha, endAlpha, t)
+                Mathf.Lerp(
+                    startAlpha,
+                    endAlpha,
+                    t
+                )
             );
 
             yield return null;
@@ -198,7 +220,9 @@ public class CutsceneManager : MonoBehaviour
         SetBlackScreen(endAlpha);
     }
 
-    private IEnumerator FadeComic(float startAlpha, float endAlpha)
+    private IEnumerator FadeComic(
+        float startAlpha,
+        float endAlpha)
     {
         float timer = 0f;
 
@@ -206,10 +230,15 @@ public class CutsceneManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float t = timer / comicFadeDuration;
+            float t =
+                timer / comicFadeDuration;
 
             comicCanvasGroup.alpha =
-                Mathf.Lerp(startAlpha, endAlpha, t);
+                Mathf.Lerp(
+                    startAlpha,
+                    endAlpha,
+                    t
+                );
 
             yield return null;
         }
@@ -228,10 +257,15 @@ public class CutsceneManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float t = timer / duration;
+            float t =
+                timer / duration;
 
             controlsCanvasGroup.alpha =
-                Mathf.Lerp(startAlpha, endAlpha, t);
+                Mathf.Lerp(
+                    startAlpha,
+                    endAlpha,
+                    t
+                );
 
             yield return null;
         }
