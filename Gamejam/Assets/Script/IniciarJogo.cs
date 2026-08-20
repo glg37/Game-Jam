@@ -7,10 +7,12 @@ public class IniciarJogo : MonoBehaviour
     public void MudarCena(string NomeDaCena)
     {
         SceneManager.LoadScene(NomeDaCena);
+        AudioListener.pause = false;
+        Time.timeScale = 1f;
     }
     public void SairDoJogo()
     {
-        Debug.Log("Botão Sair foi pressionado!");
+        Debug.Log("Botï¿½o Sair foi pressionado!");
         Application.Quit();
     }
    public void AbrirPainel(GameObject painel)

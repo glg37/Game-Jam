@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CutsceneManager : MonoBehaviour
 {
-    [Header("Animação")]
+    [Header("AnimaÃ§Ã£o")]
     [SerializeField] private Animator animator;
     [SerializeField] private string animationStateName = "Cutscene";
     [SerializeField] private float animationDuration = 5f;
@@ -17,41 +17,57 @@ public class CutsceneManager : MonoBehaviour
     [SerializeField] private GameObject comicImage;
     [SerializeField] private CanvasGroup comicCanvasGroup;
 
-    [Header("Narração")]
+    [Header("NarraÃ§Ã£o do Quadrinho")]
     [SerializeField] private AudioSource narration;
 
-    [Header("Próxima Cena")]
+    [Header("Controles")]
+    [SerializeField] private GameObject controlsText;
+    [SerializeField] private CanvasGroup controlsCanvasGroup;
+    [SerializeField] private AudioSource controlsNarration;
+
+    [Header("Fade dos Controles")]
+    [SerializeField] private float controlsFadeDuration = 1.5f;
+    [SerializeField] private float controlsFadeOutDuration = 1.5f;
+
+    [Header("PrÃ³xima Cena")]
     [SerializeField] private string nextSceneName;
 
-    [Header("Fades")]
-    [SerializeField] private float fadeDuration = 1.5f;
+    [Header("Fades da Tela")]
+    [SerializeField] private float fadeInDuration = 3f;
+    [SerializeField] private float fadeToBlackDuration = 1.5f;
+
+    [Header("Fade do Quadrinho")]
     [SerializeField] private float comicFadeDuration = 1.5f;
 
     private void Start()
     {
-        // Começa completamente preto
         SetBlackScreen(1f);
 
-        // Quadrinho começa desligado
         if (comicImage != null)
             comicImage.SetActive(false);
+
+        if (controlsText != null)
+            controlsText.SetActive(false);
+
+        if (controlsCanvasGroup != null)
+            controlsCanvasGroup.alpha = 0f;
 
         StartCoroutine(CutsceneSequence());
     }
 
     private IEnumerator CutsceneSequence()
     {
-        // =========================================
-        // 1. FADE OUT INICIAL
-        // =========================================
+        // ==========================================
+        // FADE-OUT DA TELA PRETA NO INÃCIO
+        // ==========================================
 
         yield return StartCoroutine(
-            FadeBlack(1f, 0f)
+            FadeBlack(1f, 0f, fadeInDuration)
         );
 
-        // =========================================
-        // 2. COMEÇA A ANIMAÇÃO
-        // =========================================
+        // ==========================================
+        // ANIMAÃ‡ÃƒO
+        // ==========================================
 
         if (animator != null)
         {
@@ -60,17 +76,17 @@ public class CutsceneManager : MonoBehaviour
             yield return new WaitForSeconds(animationDuration);
         }
 
-        // =========================================
-        // 3. FADE PARA PRETO
-        // =========================================
+        // ==========================================
+        // TELA PRETA ANTES DO QUADRINHO
+        // ==========================================
 
         yield return StartCoroutine(
-            FadeBlack(0f, 1f)
+            FadeBlack(0f, 1f, fadeToBlackDuration)
         );
 
-        // =========================================
-        // 4. MOSTRA O QUADRINHO
-        // =========================================
+        // ==========================================
+        // MOSTRA O QUADRINHO
+        // ==========================================
 
         if (comicImage != null)
             comicImage.SetActive(true);
@@ -78,9 +94,9 @@ public class CutsceneManager : MonoBehaviour
         if (comicCanvasGroup != null)
             comicCanvasGroup.alpha = 1f;
 
-        // =========================================
-        // 5. COMEÇA A NARRAÇÃO
-        // =========================================
+        // ==========================================
+        // NARRAÃ‡ÃƒO DO QUADRINHO
+        // ==========================================
 
         if (narration != null && narration.clip != null)
         {
@@ -91,9 +107,9 @@ public class CutsceneManager : MonoBehaviour
             );
         }
 
-        // =========================================
-        // 6. FADE-OUT DO QUADRINHO
-        // =========================================
+        // ==========================================
+        // FADE-OUT DO QUADRINHO
+        // ==========================================
 
         if (comicCanvasGroup != null)
         {
@@ -102,16 +118,56 @@ public class CutsceneManager : MonoBehaviour
             );
         }
 
-        // =========================================
-        // 7. DESATIVA O QUADRINHO
-        // =========================================
-
         if (comicImage != null)
             comicImage.SetActive(false);
 
-        // =========================================
-        // 8. MUDA DE CENA
-        // =========================================
+        // ==========================================
+        // TEXTO DOS CONTROLES
+        // ==========================================
+
+        if (controlsText != null)
+            controlsText.SetActive(true);
+
+        // ComeÃ§a a narraÃ§Ã£o
+        if (controlsNarration != null && controlsNarration.clip != null)
+            controlsNarration.Play();
+
+        // Fade-in do texto
+        if (controlsCanvasGroup != null)
+        {
+            yield return StartCoroutine(
+                FadeControls(0f, 1f, controlsFadeDuration)
+            );
+        }
+
+        // ==========================================
+        // ESPERA A NARRAÃ‡ÃƒO TERMINAR
+        // ==========================================
+
+        if (controlsNarration != null && controlsNarration.clip != null)
+        {
+            yield return new WaitWhile(
+                () => controlsNarration.isPlaying
+            );
+        }
+
+        // ==========================================
+        // FADE-OUT DOS CONTROLES
+        // ==========================================
+
+        if (controlsCanvasGroup != null)
+        {
+            yield return StartCoroutine(
+                FadeControls(1f, 0f, controlsFadeOutDuration)
+            );
+        }
+
+        if (controlsText != null)
+            controlsText.SetActive(false);
+
+        // ==========================================
+        // PRÃ“XIMA CENA
+        // ==========================================
 
         if (!string.IsNullOrEmpty(nextSceneName))
         {
@@ -119,15 +175,18 @@ public class CutsceneManager : MonoBehaviour
         }
     }
 
-    private IEnumerator FadeBlack(float startAlpha, float endAlpha)
+    private IEnumerator FadeBlack(
+        float startAlpha,
+        float endAlpha,
+        float duration)
     {
         float timer = 0f;
 
-        while (timer < fadeDuration)
+        while (timer < duration)
         {
             timer += Time.deltaTime;
 
-            float t = timer / fadeDuration;
+            float t = timer / duration;
 
             SetBlackScreen(
                 Mathf.Lerp(startAlpha, endAlpha, t)
@@ -156,6 +215,28 @@ public class CutsceneManager : MonoBehaviour
         }
 
         comicCanvasGroup.alpha = endAlpha;
+    }
+
+    private IEnumerator FadeControls(
+        float startAlpha,
+        float endAlpha,
+        float duration)
+    {
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            controlsCanvasGroup.alpha =
+                Mathf.Lerp(startAlpha, endAlpha, t);
+
+            yield return null;
+        }
+
+        controlsCanvasGroup.alpha = endAlpha;
     }
 
     private void SetBlackScreen(float alpha)
