@@ -87,7 +87,7 @@ public class ArmaAgua : MonoBehaviour
             }
         }
 
-        // Som contínuo do disparo
+      
         if (somAgua != null && !somAgua.isPlaying)
         {
             somAgua.Play();
@@ -118,14 +118,14 @@ public class ArmaAgua : MonoBehaviour
 
         if (estavaAtirando)
         {
-            // Começa o som de parada primeiro
+            
             if (somParadaAgua != null)
             {
                 somParadaAgua.Stop();
                 somParadaAgua.Play();
             }
 
-            // Para o som contínuo imediatamente depois
+           
             if (somAgua != null)
             {
                 somAgua.Stop();

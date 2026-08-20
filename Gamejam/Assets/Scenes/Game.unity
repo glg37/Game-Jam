@@ -715,7 +715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -1111,7 +1111,7 @@ Transform:
   m_GameObject: {fileID: 271780402}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.1221313, y: -0.6140801, z: -50.237526}
+  m_LocalPosition: {x: -9.44, y: 1.87, z: -41.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1346,7 +1346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -1989,7 +1989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -2449,7 +2449,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -2857,7 +2857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -3564,7 +3564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.05660379, g: 0, b: 0.013662981, a: 0.9137255}
+  m_Color: {r: 0.05660379, g: 0, b: 0.013662981, a: 0.9882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3856,7 +3856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -4088,7 +4088,7 @@ Transform:
   m_GameObject: {fileID: 688006034}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.792137, y: -0.09108007, z: -35.297527}
+  m_LocalPosition: {x: -26.2, y: 6.107, z: -32.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4323,7 +4323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -4781,7 +4781,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -6846,7 +6846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -7222,7 +7222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -7789,7 +7789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -9644,7 +9644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -12555,7 +12555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -13443,7 +13443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -13789,7 +13789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -14061,7 +14061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -15991,9 +15991,9 @@ MonoBehaviour:
   - {fileID: 1884063174}
   - {fileID: 2068449889}
   - {fileID: 607746790}
-  minTimeUntilFire: 10
-  maxTimeUntilFire: 50
-  timeToExtinguish: 40
+  minTimeUntilFire: 5
+  maxTimeUntilFire: 30
+  timeToExtinguish: 50
   calmMusic: {fileID: 1410428256}
   fireMusic: {fileID: 106087664}
   calmVolume: 0.35
@@ -22203,9 +22203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40b8b9de91a64b4a90d255690e040a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Ecolocalizacao
-  raioInicial: 8
-  duracao: 5
-  tempoRecarga: 1
+  raioInicial: 10
+  duracao: 9
+  tempoRecarga: 0.3
   objetosDetectaveis:
     serializedVersion: 2
     m_Bits: 216
@@ -22422,7 +22422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
-  outlineColor: {r: 1, g: 0.82480705, b: 0, a: 1}
+  outlineColor: {r: 1, g: 0.015461222, b: 0, a: 1}
   outlineWidth: 10
   precomputeOutline: 0
   bakeKeys: []
@@ -23770,8 +23770,8 @@ MonoBehaviour:
   somParadaAgua: {fileID: 475245643}
   aguaMaxima: 100
   aguaAtual: 100
-  consumoPorSegundo: 10
-  recargaPorSegundo: 30
+  consumoPorSegundo: 15
+  recargaPorSegundo: 20
   barraAgua: {fileID: 5398134778645992744}
 --- !u!82 &9201326777701925887
 AudioSource:

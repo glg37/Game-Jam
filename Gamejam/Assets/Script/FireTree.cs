@@ -50,7 +50,7 @@ public class FireTree : MonoBehaviour
             );
         }
 
-        // Encontra todas as partículas dentro do efeito de fogo
+       
         if (fireEffect != null)
         {
             particulasFogo =
@@ -86,13 +86,13 @@ public class FireTree : MonoBehaviour
         if (!IsBurning)
             return;
 
-        // Verifica se a água continua atingindo o fogo
+        
         bool recebendoAgua =
             Time.time - ultimoAcertoAgua <= tempoSemAguaParaParar;
 
         if (recebendoAgua)
         {
-            // Aumenta o progresso de extinção
+            
             progressoExtincao +=
                 Time.deltaTime / tempoParaApagar;
 
@@ -101,7 +101,7 @@ public class FireTree : MonoBehaviour
 
             AtualizarFogo();
 
-            // Fogo completamente apagado
+            
             if (progressoExtincao >= 1f)
             {
                 ExtinguishFire();
@@ -131,7 +131,7 @@ public class FireTree : MonoBehaviour
         if (smokeEffect != null)
             smokeEffect.SetActive(true);
 
-        // Restaura o fogo ao tamanho original
+        
         RestaurarFogo();
 
         if (fireSound != null)
@@ -152,13 +152,13 @@ public class FireTree : MonoBehaviour
         );
     }
 
-    // Chamado pelas partículas de água
+  
     public void AguaAtingindo()
     {
         if (!IsBurning)
             return;
 
-        // Atualiza o momento do último impacto
+        
         ultimoAcertoAgua = Time.time;
     }
 
@@ -167,7 +167,7 @@ public class FireTree : MonoBehaviour
         float progresso =
             progressoExtincao;
 
-        // Diminui gradualmente a quantidade de fogo
+       
         if (particulasFogo != null)
         {
             for (int i = 0; i < particulasFogo.Length; i++)
@@ -184,7 +184,7 @@ public class FireTree : MonoBehaviour
             }
         }
 
-        // Diminui o som junto com o fogo
+      
         if (fireSound != null)
         {
             fireSound.volume =
@@ -235,7 +235,7 @@ public class FireTree : MonoBehaviour
             yield return null;
         }
 
-        // Agora sim o fogo foi realmente apagado
+        
         IsBurning = false;
 
         if (myCollider != null)

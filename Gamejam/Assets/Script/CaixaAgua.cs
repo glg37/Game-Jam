@@ -36,7 +36,7 @@ public class CaixaAgua : MonoBehaviour
         {
             armaDoJogador.RecarregarAgua();
 
-            // Começa o som enquanto segura R
+            
             if (somRecarga != null && !somRecarga.isPlaying)
             {
                 somRecarga.Play();
@@ -44,7 +44,7 @@ public class CaixaAgua : MonoBehaviour
         }
         else
         {
-            // Para quando soltar R ou olhar para outro lugar
+            
             if (somRecarga != null && somRecarga.isPlaying)
             {
                 somRecarga.Stop();

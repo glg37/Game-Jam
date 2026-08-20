@@ -34,7 +34,7 @@ public class Ecolocalizacao : MonoBehaviour
 
     private List<Outline> outlinesAtivos = new List<Outline>();
 
-    // Árvores temporárias criadas durante a ecolocalização
+
     private List<GameObject> arvoresTemporarias =
         new List<GameObject>();
 
@@ -69,10 +69,10 @@ public class Ecolocalizacao : MonoBehaviour
                 progresso
             );
 
-            // Objetos normais
+        
             DetectarObjetos(raioAtual);
 
-            // Árvores do Terrain
+            
             DetectarArvoresTerrain(raioAtual);
 
             yield return null;
@@ -86,9 +86,7 @@ public class Ecolocalizacao : MonoBehaviour
         podeUsar = true;
     }
 
-    // =========================================================
-    // OBJETOS NORMAIS
-    // =========================================================
+    
 
     private void DetectarObjetos(float raio)
     {
@@ -153,9 +151,7 @@ public class Ecolocalizacao : MonoBehaviour
         outline.enabled = true;
     }
 
-    // =========================================================
-    // ÁRVORES DO TERRAIN
-    // =========================================================
+    
 
     private void DetectarArvoresTerrain(float raio)
     {
@@ -178,8 +174,8 @@ public class Ecolocalizacao : MonoBehaviour
             {
                 TreeInstance arvore = arvores[i];
 
-                // Converte a posição da árvore do Terrain
-                // para posição no mundo.
+               
+              
                 Vector3 posicaoMundo =
                     terrain.transform.TransformPoint(
                         Vector3.Scale(
@@ -194,8 +190,7 @@ public class Ecolocalizacao : MonoBehaviour
                         posicaoMundo
                     );
 
-                // Só cria a representação da árvore
-                // se ela estiver dentro do raio.
+               
                 if (distancia <= raio)
                 {
                     CriarOutlineArvore(
@@ -232,7 +227,7 @@ public class Ecolocalizacao : MonoBehaviour
         if (prefab == null)
             return;
 
-        // Evita criar várias cópias da mesma árvore.
+        
         string nomeArvore =
             "ECO_TREE_" +
             terrain.GetInstanceID() +
@@ -259,7 +254,7 @@ public class Ecolocalizacao : MonoBehaviour
 
         arvoreTemporaria.name = nomeArvore;
 
-        // Aplica o tamanho original da árvore do Terrain.
+        
         arvoreTemporaria.transform.localScale =
             new Vector3(
                 arvore.widthScale,
@@ -267,7 +262,7 @@ public class Ecolocalizacao : MonoBehaviour
                 arvore.widthScale
             );
 
-        // Adiciona Outline automaticamente.
+        
         Outline outline =
             arvoreTemporaria.GetComponent<Outline>();
 
@@ -312,9 +307,7 @@ public class Ecolocalizacao : MonoBehaviour
         return Color.white;
     }
 
-    // =========================================================
-    // LIMPEZA
-    // =========================================================
+  
 
     private void DesativarTodosOutlines()
     {
