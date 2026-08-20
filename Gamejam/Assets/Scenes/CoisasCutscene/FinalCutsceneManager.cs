@@ -7,17 +7,20 @@ public class FinalCutsceneManager : MonoBehaviour
 {
     [Header("Tela Preta")]
     [SerializeField] private Image blackScreen;
-    [SerializeField] private float fadeInDuration = 2f;
 
     [Header("Quadrinho")]
     [SerializeField] private GameObject comicImage;
     [SerializeField] private CanvasGroup comicCanvasGroup;
 
+    [Header("Entrada do Quadrinho")]
+    [SerializeField] private float tempoAntesDoQuadrinho = 1f;
+    [SerializeField] private float comicFadeInDuration = 1.5f;
+
     [Header("Narração do Quadrinho")]
     [SerializeField] private AudioSource narration;
 
     [Header("Fade do Quadrinho")]
-    [SerializeField] private float comicFadeDuration = 1.5f;
+    [SerializeField] private float comicFadeOutDuration = 1.5f;
 
     [Header("Tela de Vitória")]
     [SerializeField] private GameObject victoryPanel;
@@ -25,32 +28,53 @@ public class FinalCutsceneManager : MonoBehaviour
 
     [SerializeField] private float victoryFadeDuration = 1.5f;
 
-    [Header("Botão")]
-    [SerializeField] private Button menuButton;
+    [Header("Som de Vitória")]
+    [SerializeField] private AudioSource victorySound;
 
-    [Header("Menu")]
+    [Header("Voltar ao Menu")]
+    [SerializeField] private float tempoNaTelaDeVitoria = 10f;
+    [SerializeField] private float fadeOutFinalDuration = 2f;
     [SerializeField] private string menuSceneName = "Menu";
 
     private void Start()
     {
-        // Tela começa preta
+        // ==========================================
+        // TELA PRETA
+        // ==========================================
+
         SetBlackScreen(1f);
 
-        // Quadrinho começa desligado
+        if (blackScreen != null)
+            blackScreen.transform.SetAsFirstSibling();
+
+        // ==========================================
+        // QUADRINHO
+        // ==========================================
+
         if (comicImage != null)
             comicImage.SetActive(false);
 
-        // Painel de vitória começa desligado
+        if (comicCanvasGroup != null)
+            comicCanvasGroup.alpha = 0f;
+
+        // ==========================================
+        // PAINEL DE VITÓRIA
+        // ==========================================
+
         if (victoryPanel != null)
             victoryPanel.SetActive(false);
 
         if (victoryCanvasGroup != null)
             victoryCanvasGroup.alpha = 0f;
 
-        // Configura botão
-        if (menuButton != null)
+        // ==========================================
+        // SOM DE VITÓRIA
+        // ==========================================
+
+        if (victorySound != null)
         {
-            menuButton.onClick.AddListener(VoltarAoMenu);
+            victorySound.playOnAwake = false;
+            victorySound.Stop();
         }
 
         StartCoroutine(CutsceneSequence());
@@ -59,11 +83,11 @@ public class FinalCutsceneManager : MonoBehaviour
     private IEnumerator CutsceneSequence()
     {
         // ==========================================
-        // FADE-IN DA TELA PRETA
+        // ESPERA ANTES DO QUADRINHO
         // ==========================================
 
-        yield return StartCoroutine(
-            FadeBlack(1f, 0f, fadeInDuration)
+        yield return new WaitForSeconds(
+            tempoAntesDoQuadrinho
         );
 
         // ==========================================
@@ -74,7 +98,17 @@ public class FinalCutsceneManager : MonoBehaviour
             comicImage.SetActive(true);
 
         if (comicCanvasGroup != null)
-            comicCanvasGroup.alpha = 1f;
+        {
+            comicCanvasGroup.alpha = 0f;
+
+            yield return StartCoroutine(
+                FadeComic(
+                    0f,
+                    1f,
+                    comicFadeInDuration
+                )
+            );
+        }
 
         // ==========================================
         // NARRAÇÃO
@@ -85,7 +119,6 @@ public class FinalCutsceneManager : MonoBehaviour
         {
             narration.Play();
 
-            // Espera o áudio inteiro terminar
             yield return new WaitForSeconds(
                 narration.clip.length
             );
@@ -100,7 +133,11 @@ public class FinalCutsceneManager : MonoBehaviour
         if (comicCanvasGroup != null)
         {
             yield return StartCoroutine(
-                FadeComic(1f, 0f)
+                FadeComic(
+                    1f,
+                    0f,
+                    comicFadeOutDuration
+                )
             );
         }
 
@@ -114,21 +151,53 @@ public class FinalCutsceneManager : MonoBehaviour
         if (victoryPanel != null)
             victoryPanel.SetActive(true);
 
+        if (victorySound != null)
+            victorySound.Play();
+
         if (victoryCanvasGroup != null)
         {
             victoryCanvasGroup.alpha = 0f;
 
             yield return StartCoroutine(
-                FadeVictory(0f, 1f)
+                FadeVictory(
+                    0f,
+                    1f
+                )
             );
         }
+
+        // ==========================================
+        // ESPERA NA TELA DE VITÓRIA
+        // ==========================================
+
+        yield return new WaitForSeconds(
+            tempoNaTelaDeVitoria
+        );
+
+        // ==========================================
+        // FADE-OUT FINAL
+        // ==========================================
+
+        yield return StartCoroutine(
+            FadeVictory(
+                1f,
+                0f,
+                fadeOutFinalDuration
+            )
+        );
+
+        // ==========================================
+        // VOLTA AO MENU
+        // ==========================================
+
+        SceneManager.LoadScene(menuSceneName);
     }
 
     // ==========================================
-    // FADE DA TELA
+    // FADE DO QUADRINHO
     // ==========================================
 
-    private IEnumerator FadeBlack(
+    private IEnumerator FadeComic(
         float startAlpha,
         float endAlpha,
         float duration)
@@ -142,39 +211,6 @@ public class FinalCutsceneManager : MonoBehaviour
             float t =
                 Mathf.Clamp01(
                     timer / duration
-                );
-
-            SetBlackScreen(
-                Mathf.Lerp(
-                    startAlpha,
-                    endAlpha,
-                    t
-                )
-            );
-
-            yield return null;
-        }
-
-        SetBlackScreen(endAlpha);
-    }
-
-    // ==========================================
-    // FADE DO QUADRINHO
-    // ==========================================
-
-    private IEnumerator FadeComic(
-        float startAlpha,
-        float endAlpha)
-    {
-        float timer = 0f;
-
-        while (timer < comicFadeDuration)
-        {
-            timer += Time.deltaTime;
-
-            float t =
-                Mathf.Clamp01(
-                    timer / comicFadeDuration
                 );
 
             comicCanvasGroup.alpha =
@@ -198,41 +234,51 @@ public class FinalCutsceneManager : MonoBehaviour
         float startAlpha,
         float endAlpha)
     {
+        yield return StartCoroutine(
+            FadeVictory(
+                startAlpha,
+                endAlpha,
+                victoryFadeDuration
+            )
+        );
+    }
+
+    private IEnumerator FadeVictory(
+        float startAlpha,
+        float endAlpha,
+        float duration)
+    {
         float timer = 0f;
 
-        while (timer < victoryFadeDuration)
+        while (timer < duration)
         {
             timer += Time.deltaTime;
 
             float t =
                 Mathf.Clamp01(
-                    timer / victoryFadeDuration
+                    timer / duration
                 );
 
-            victoryCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    endAlpha,
-                    t
-                );
+            if (victoryCanvasGroup != null)
+            {
+                victoryCanvasGroup.alpha =
+                    Mathf.Lerp(
+                        startAlpha,
+                        endAlpha,
+                        t
+                    );
+            }
 
             yield return null;
         }
 
-        victoryCanvasGroup.alpha = endAlpha;
+        if (victoryCanvasGroup != null)
+            victoryCanvasGroup.alpha = endAlpha;
     }
 
     // ==========================================
-    // BOTÃO
+    // TELA PRETA
     // ==========================================
-
-    private void VoltarAoMenu()
-    {
-        if (narration != null)
-            narration.Stop();
-
-        SceneManager.LoadScene(menuSceneName);
-    }
 
     private void SetBlackScreen(float alpha)
     {
@@ -240,7 +286,12 @@ public class FinalCutsceneManager : MonoBehaviour
             return;
 
         Color color = blackScreen.color;
+
+        color.r = 0f;
+        color.g = 0f;
+        color.b = 0f;
         color.a = alpha;
+
         blackScreen.color = color;
     }
 }
