@@ -34,7 +34,8 @@ public class FireTree : MonoBehaviour
     private ParticleSystem[] particulasFogo;
     private float[] emissaoOriginal;
 
-    public static readonly List<Collider> BurningColliders = new List<Collider>();
+    public static readonly List<Collider> BurningColliders =
+        new List<Collider>();
 
     private void Awake()
     {
@@ -50,7 +51,6 @@ public class FireTree : MonoBehaviour
             );
         }
 
-       
         if (fireEffect != null)
         {
             particulasFogo =
@@ -61,7 +61,8 @@ public class FireTree : MonoBehaviour
 
             for (int i = 0; i < particulasFogo.Length; i++)
             {
-                var emission = particulasFogo[i].emission;
+                var emission =
+                    particulasFogo[i].emission;
 
                 emissaoOriginal[i] =
                     emission.rateOverTimeMultiplier;
@@ -86,13 +87,12 @@ public class FireTree : MonoBehaviour
         if (!IsBurning)
             return;
 
-        
         bool recebendoAgua =
-            Time.time - ultimoAcertoAgua <= tempoSemAguaParaParar;
+            Time.time - ultimoAcertoAgua <=
+            tempoSemAguaParaParar;
 
         if (recebendoAgua)
         {
-            
             progressoExtincao +=
                 Time.deltaTime / tempoParaApagar;
 
@@ -101,7 +101,6 @@ public class FireTree : MonoBehaviour
 
             AtualizarFogo();
 
-            
             if (progressoExtincao >= 1f)
             {
                 ExtinguishFire();
@@ -131,7 +130,6 @@ public class FireTree : MonoBehaviour
         if (smokeEffect != null)
             smokeEffect.SetActive(true);
 
-        
         RestaurarFogo();
 
         if (fireSound != null)
@@ -152,13 +150,11 @@ public class FireTree : MonoBehaviour
         );
     }
 
-  
     public void AguaAtingindo()
     {
         if (!IsBurning)
             return;
 
-        
         ultimoAcertoAgua = Time.time;
     }
 
@@ -167,7 +163,6 @@ public class FireTree : MonoBehaviour
         float progresso =
             progressoExtincao;
 
-       
         if (particulasFogo != null)
         {
             for (int i = 0; i < particulasFogo.Length; i++)
@@ -184,7 +179,6 @@ public class FireTree : MonoBehaviour
             }
         }
 
-      
         if (fireSound != null)
         {
             fireSound.volume =
@@ -212,9 +206,10 @@ public class FireTree : MonoBehaviour
     {
         float timer = 0f;
 
-        float volumeInicial = fireSound != null
-            ? fireSound.volume
-            : 0f;
+        float volumeInicial =
+            fireSound != null
+                ? fireSound.volume
+                : 0f;
 
         while (timer < tempoParaSumir)
         {
@@ -225,17 +220,17 @@ public class FireTree : MonoBehaviour
 
             if (fireSound != null)
             {
-                fireSound.volume = Mathf.Lerp(
-                    volumeInicial,
-                    0f,
-                    progresso
-                );
+                fireSound.volume =
+                    Mathf.Lerp(
+                        volumeInicial,
+                        0f,
+                        progresso
+                    );
             }
 
             yield return null;
         }
 
-        
         IsBurning = false;
 
         if (myCollider != null)
@@ -255,9 +250,43 @@ public class FireTree : MonoBehaviour
 
         progressoExtincao = 0f;
 
-        Debug.Log(gameObject.name + " foi apagada!");
+        Debug.Log(
+            gameObject.name +
+            " foi apagada!"
+        );
 
         extinguishCoroutine = null;
+    }
+
+    public void ForceExtinguish()
+    {
+        if (extinguishCoroutine != null)
+        {
+            StopCoroutine(extinguishCoroutine);
+            extinguishCoroutine = null;
+        }
+
+        IsBurning = false;
+
+        progressoExtincao = 0f;
+        ultimoAcertoAgua = -999f;
+
+        if (myCollider != null)
+            BurningColliders.Remove(myCollider);
+
+        if (fireEffect != null)
+            fireEffect.SetActive(false);
+
+        if (smokeEffect != null)
+            smokeEffect.SetActive(false);
+
+        if (fireSound != null)
+        {
+            fireSound.Stop();
+            fireSound.volume = 1f;
+        }
+
+        RestaurarFogo();
     }
 
     private void RestaurarFogo()

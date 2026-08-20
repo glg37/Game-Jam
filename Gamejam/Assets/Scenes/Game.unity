@@ -8891,7 +8891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ebf4cea96c4c3b4aa3b4f86d565ce54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameVictory
-  segundosPorHora: 60
+  segundosPorHora: 50
   horaInicial: 17
   horaFinal: 22
   textoRelogio: {fileID: 1323584766}
@@ -8900,7 +8900,7 @@ MonoBehaviour:
   textoVitoria: {fileID: 4489892943873482019}
   tempoParaSumirVitoria: 8
   duracaoFadeVitoria: 1.5
-  fireEventManager: {fileID: 0}
+  fireEventManager: {fileID: 3193304541265808027}
   colliderCabana: {fileID: 3075407150771470744}
   telaPreta: {fileID: 7231206821133891111}
   tempoFade: 2

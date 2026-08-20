@@ -29,16 +29,18 @@ public class FireEventManager : MonoBehaviour
     private FireTree currentTree;
     private Coroutine fireRoutine;
 
-    private List<FireTree> treesAlreadyUsed = new List<FireTree>();
+    private List<FireTree> treesAlreadyUsed =
+        new List<FireTree>();
 
     private Coroutine musicFadeRoutine;
+
+    private bool incendiosParados = false;
 
     private void Start()
     {
         if (defeatScreen != null)
             defeatScreen.SetActive(false);
 
-        // Música calma começa tocando
         if (calmMusic != null)
         {
             calmMusic.volume = calmVolume;
@@ -46,7 +48,6 @@ public class FireEventManager : MonoBehaviour
             calmMusic.Play();
         }
 
-        // Música de incêndio começa desligada
         if (fireMusic != null)
         {
             fireMusic.volume = 0f;
@@ -59,7 +60,7 @@ public class FireEventManager : MonoBehaviour
 
     private IEnumerator FireCycle()
     {
-        while (true)
+        while (!incendiosParados)
         {
             float waitTime = Random.Range(
                 minTimeUntilFire,
@@ -68,11 +69,17 @@ public class FireEventManager : MonoBehaviour
 
             yield return new WaitForSeconds(waitTime);
 
+            if (incendiosParados)
+                yield break;
+
             currentTree = GetRandomUnusedTree();
 
             if (currentTree == null)
             {
-                Debug.Log("Todas as árvores já pegaram fogo!");
+                Debug.Log(
+                    "Todas as árvores já pegaram fogo!"
+                );
+
                 yield break;
             }
 
@@ -85,18 +92,18 @@ public class FireEventManager : MonoBehaviour
                 currentTree.gameObject.name
             );
 
-            // Troca para música frenética
             StartMusicTransition(true);
 
             float timer = timeToExtinguish;
 
             while (timer > 0f)
             {
+                if (incendiosParados)
+                    yield break;
+
                 if (!currentTree.IsBurning)
                 {
-                    // Volta para música calma
                     StartMusicTransition(false);
-
                     break;
                 }
 
@@ -104,6 +111,9 @@ public class FireEventManager : MonoBehaviour
 
                 yield return null;
             }
+
+            if (incendiosParados)
+                yield break;
 
             if (currentTree != null &&
                 currentTree.IsBurning)
@@ -119,29 +129,44 @@ public class FireEventManager : MonoBehaviour
 
     public void PararIncendios()
     {
+        incendiosParados = true;
+
         if (fireRoutine != null)
         {
             StopCoroutine(fireRoutine);
             fireRoutine = null;
         }
 
-        if (musicFadeRoutine != null)
+        if (currentTree != null &&
+            currentTree.IsBurning)
         {
-            StopCoroutine(musicFadeRoutine);
-            musicFadeRoutine = null;
+            currentTree.ExtinguishFire();
         }
 
-        if (calmMusic != null)
-            calmMusic.Stop();
+        if (trees != null)
+        {
+            foreach (FireTree tree in trees)
+            {
+                if (tree != null &&
+                    tree.IsBurning)
+                {
+                    tree.ExtinguishFire();
+                }
+            }
+        }
 
-        if (fireMusic != null)
-            fireMusic.Stop();
+        StartMusicTransition(false);
 
-        Debug.Log("Incêndios encerrados: turno finalizado.");
+        Debug.Log(
+            "Incêndios encerrados: turno finalizado."
+        );
     }
 
     private void StartMusicTransition(bool fire)
     {
+        if (incendiosParados && fire)
+            return;
+
         if (musicFadeRoutine != null)
             StopCoroutine(musicFadeRoutine);
 
@@ -153,16 +178,29 @@ public class FireEventManager : MonoBehaviour
     private IEnumerator CrossFadeMusic(bool fire)
     {
         float startCalmVolume =
-            calmMusic != null ? calmMusic.volume : 0f;
+            calmMusic != null
+                ? calmMusic.volume
+                : 0f;
 
         float startFireVolume =
-            fireMusic != null ? fireMusic.volume : 0f;
+            fireMusic != null
+                ? fireMusic.volume
+                : 0f;
 
-        if (fire && fireMusic != null &&
+        if (fire &&
+            fireMusic != null &&
             !fireMusic.isPlaying)
         {
             fireMusic.volume = 0f;
             fireMusic.Play();
+        }
+
+        if (!fire &&
+            calmMusic != null &&
+            !calmMusic.isPlaying)
+        {
+            calmMusic.volume = 0f;
+            calmMusic.Play();
         }
 
         float timer = 0f;
@@ -171,7 +209,10 @@ public class FireEventManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            float t = timer / fadeDuration;
+            float t =
+                Mathf.Clamp01(
+                    timer / fadeDuration
+                );
 
             if (calmMusic != null)
             {
@@ -216,11 +257,14 @@ public class FireEventManager : MonoBehaviour
             if (!fire)
                 fireMusic.Stop();
         }
+
+        musicFadeRoutine = null;
     }
 
     private FireTree GetRandomUnusedTree()
     {
-        if (trees == null || trees.Length == 0)
+        if (trees == null ||
+            trees.Length == 0)
             return null;
 
         List<FireTree> availableTrees =
@@ -239,7 +283,10 @@ public class FireEventManager : MonoBehaviour
             return null;
 
         int index =
-            Random.Range(0, availableTrees.Count);
+            Random.Range(
+                0,
+                availableTrees.Count
+            );
 
         return availableTrees[index];
     }
@@ -273,7 +320,9 @@ public class FireEventManager : MonoBehaviour
             }
         }
 
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState =
+            CursorLockMode.None;
+
         Cursor.visible = true;
 
         Time.timeScale = 0f;

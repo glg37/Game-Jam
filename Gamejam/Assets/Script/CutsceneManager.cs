@@ -126,6 +126,9 @@ public class CutsceneManager : MonoBehaviour
             narration.Stop();
         }
 
+        if (isSkipping)
+            yield break;
+
         if (comicCanvasGroup != null)
         {
             yield return StartCoroutine(
@@ -250,12 +253,15 @@ public class CutsceneManager : MonoBehaviour
                 timer / comicFadeDuration
             );
 
-            comicCanvasGroup.alpha =
-                Mathf.Lerp(
-                    1f,
-                    0f,
-                    t
-                );
+            if (comicCanvasGroup != null)
+            {
+                comicCanvasGroup.alpha =
+                    Mathf.Lerp(
+                        1f,
+                        0f,
+                        t
+                    );
+            }
 
             if (narration != null)
             {
@@ -270,7 +276,8 @@ public class CutsceneManager : MonoBehaviour
             yield return null;
         }
 
-        comicCanvasGroup.alpha = 0f;
+        if (comicCanvasGroup != null)
+            comicCanvasGroup.alpha = 0f;
 
         if (narration != null)
         {
@@ -323,7 +330,8 @@ public class CutsceneManager : MonoBehaviour
             yield return StartCoroutine(
                 FadeComic(
                     1f,
-                    0f
+                    0f,
+                    skipFadeDuration
                 )
             );
         }
@@ -436,29 +444,34 @@ public class CutsceneManager : MonoBehaviour
 
     private IEnumerator FadeComic(
         float startAlpha,
-        float endAlpha)
+        float endAlpha,
+        float duration)
     {
         float timer = 0f;
 
-        while (timer < comicFadeDuration)
+        while (timer < duration)
         {
             timer += Time.deltaTime;
 
             float t = Mathf.Clamp01(
-                timer / comicFadeDuration
+                timer / duration
             );
 
-            comicCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    endAlpha,
-                    t
-                );
+            if (comicCanvasGroup != null)
+            {
+                comicCanvasGroup.alpha =
+                    Mathf.Lerp(
+                        startAlpha,
+                        endAlpha,
+                        t
+                    );
+            }
 
             yield return null;
         }
 
-        comicCanvasGroup.alpha = endAlpha;
+        if (comicCanvasGroup != null)
+            comicCanvasGroup.alpha = endAlpha;
     }
 
     private IEnumerator FadeControls(
@@ -476,17 +489,21 @@ public class CutsceneManager : MonoBehaviour
                 timer / duration
             );
 
-            controlsCanvasGroup.alpha =
-                Mathf.Lerp(
-                    startAlpha,
-                    endAlpha,
-                    t
-                );
+            if (controlsCanvasGroup != null)
+            {
+                controlsCanvasGroup.alpha =
+                    Mathf.Lerp(
+                        startAlpha,
+                        endAlpha,
+                        t
+                    );
+            }
 
             yield return null;
         }
 
-        controlsCanvasGroup.alpha = endAlpha;
+        if (controlsCanvasGroup != null)
+            controlsCanvasGroup.alpha = endAlpha;
     }
 
     private void LoadNextScene()
