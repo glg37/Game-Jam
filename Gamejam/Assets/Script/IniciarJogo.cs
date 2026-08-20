@@ -7,9 +7,12 @@ public class IniciarJogo : MonoBehaviour
     public void MudarCena(string NomeDaCena)
     {
         SceneManager.LoadScene(NomeDaCena);
+        AudioListener.pause = false;
+        Time.timeScale = 1f;
     }
-    public void OnApplicationQuit()
+    public void SairDoJogo()
     {
+        Debug.Log("Bot�o Sair foi pressionado!");
         Application.Quit();
     }
    public void AbrirPainel(GameObject painel)
@@ -24,5 +27,6 @@ public class IniciarJogo : MonoBehaviour
     public void ReiniciarJogo()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
     }
 }
