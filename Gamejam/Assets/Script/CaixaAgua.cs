@@ -9,6 +9,9 @@ public class CaixaAgua : MonoBehaviour
     [Header("Mensagem na tela")]
     [SerializeField] private GameObject mensagemRecarregar;
 
+    [Header("Som da Recarga")]
+    [SerializeField] private AudioSource somRecarga;
+
     private ArmaAgua armaDoJogador;
 
     private bool podeRecarregar = false;
@@ -18,6 +21,9 @@ public class CaixaAgua : MonoBehaviour
         mensagemRecarregar.SetActive(false);
 
         armaDoJogador = FindFirstObjectByType<ArmaAgua>();
+
+        if (somRecarga != null)
+            somRecarga.Stop();
     }
 
     private void Update()
@@ -29,6 +35,20 @@ public class CaixaAgua : MonoBehaviour
             Input.GetKey(KeyCode.R))
         {
             armaDoJogador.RecarregarAgua();
+
+            // Começa o som enquanto segura R
+            if (somRecarga != null && !somRecarga.isPlaying)
+            {
+                somRecarga.Play();
+            }
+        }
+        else
+        {
+            // Para quando soltar R ou olhar para outro lugar
+            if (somRecarga != null && somRecarga.isPlaying)
+            {
+                somRecarga.Stop();
+            }
         }
     }
 

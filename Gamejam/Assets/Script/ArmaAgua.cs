@@ -7,6 +7,10 @@ public class ArmaAgua : MonoBehaviour
     public GameObject jatoAgua;
     private ParticleSystem particula;
 
+    [Header("Som do Disparo")]
+    [SerializeField] private AudioSource somAgua;
+    [SerializeField] private AudioSource somParadaAgua;
+
     [Header("Água")]
     public float aguaMaxima = 100f;
     public float aguaAtual = 100f;
@@ -18,7 +22,7 @@ public class ArmaAgua : MonoBehaviour
     [Header("UI")]
     public Slider barraAgua;
 
-    void Start()
+    private void Start()
     {
         aguaAtual = aguaMaxima;
 
@@ -33,8 +37,6 @@ public class ArmaAgua : MonoBehaviour
         {
             particula = jatoAgua.GetComponent<ParticleSystem>();
 
-            // Deixa o objeto ativo para que as partículas
-            // possam continuar existindo depois que o disparo parar.
             jatoAgua.SetActive(true);
 
             if (particula != null)
@@ -45,9 +47,23 @@ public class ArmaAgua : MonoBehaviour
                 );
             }
         }
+
+        if (somAgua != null)
+        {
+            somAgua.loop = true;
+            somAgua.playOnAwake = false;
+            somAgua.Stop();
+        }
+
+        if (somParadaAgua != null)
+        {
+            somParadaAgua.loop = false;
+            somParadaAgua.playOnAwake = false;
+            somParadaAgua.Stop();
+        }
     }
 
-    void Update()
+    private void Update()
     {
         if (Input.GetMouseButton(0) && aguaAtual > 0)
         {
@@ -61,7 +77,7 @@ public class ArmaAgua : MonoBehaviour
         AtualizarBarra();
     }
 
-    void AtirarAgua()
+    private void AtirarAgua()
     {
         if (particula != null)
         {
@@ -71,7 +87,14 @@ public class ArmaAgua : MonoBehaviour
             }
         }
 
-        aguaAtual -= consumoPorSegundo * Time.deltaTime;
+        // Som contínuo do disparo
+        if (somAgua != null && !somAgua.isPlaying)
+        {
+            somAgua.Play();
+        }
+
+        aguaAtual -=
+            consumoPorSegundo * Time.deltaTime;
 
         if (aguaAtual <= 0)
         {
@@ -80,22 +103,40 @@ public class ArmaAgua : MonoBehaviour
         }
     }
 
-    void PararAgua()
+    private void PararAgua()
     {
+        bool estavaAtirando =
+            somAgua != null && somAgua.isPlaying;
+
         if (particula != null)
         {
-            // Para SOMENTE a emissão de novas partículas.
-            // As partículas que já estão no ar continuam.
             particula.Stop(
                 true,
                 ParticleSystemStopBehavior.StopEmitting
             );
         }
+
+        if (estavaAtirando)
+        {
+            // Começa o som de parada primeiro
+            if (somParadaAgua != null)
+            {
+                somParadaAgua.Stop();
+                somParadaAgua.Play();
+            }
+
+            // Para o som contínuo imediatamente depois
+            if (somAgua != null)
+            {
+                somAgua.Stop();
+            }
+        }
     }
 
     public void RecarregarAgua()
     {
-        aguaAtual += recargaPorSegundo * Time.deltaTime;
+        aguaAtual +=
+            recargaPorSegundo * Time.deltaTime;
 
         if (aguaAtual >= aguaMaxima)
         {

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 236bd64f18147e346a334b1804773ffd
+guid: 850f4fea96324584195b35792c96c176
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,13 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ultimo quadrihno_0
+      name: New Piskel (3) 1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 400
-        height: 400
+        x: 8
+        y: 12
+        width: 92
+        height: 86
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -151,8 +151,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a402fb62be6d397478c007536098255a
-      internalID: 200624108
+      spriteID: 8f2eb3e847893614d9b835bcdd6574e9
+      internalID: 387761328
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 51dfdd7886b94d041bf1ffcb91d3e980
+    spriteID: 79aa54601686aac439b74b15741a5250
     internalID: 0
     vertices: []
     indices: 
@@ -171,7 +171,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ultimo quadrihno_0: 200624108
+      New Piskel (3) 1_0: 387761328
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
