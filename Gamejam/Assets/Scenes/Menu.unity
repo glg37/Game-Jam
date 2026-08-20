@@ -962,14 +962,14 @@ RectTransform:
   m_GameObject: {fileID: 457257902}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.93811995, y: 0.93811995, z: 0.93811995}
+  m_LocalScale: {x: 0.87242633, y: 0.75795424, z: 0.93812}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 855289678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000095367, y: -18}
+  m_AnchoredPosition: {x: -29, y: 19.8}
   m_SizeDelta: {x: 466.5359, y: 200.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &457257904
@@ -995,7 +995,8 @@ MonoBehaviour:
   m_text: "GABRIEL LANGA GUTJAHR - Programa\xE7\xE3o \u2022 Game design\nENZO FELIPE
     SCHLAGEL - Modela\xE7\xE3o \u2022 ArtE 3D\nVICTOR DOS ANJOS - Game Design \u2022
     Programa\xE7\xE3o\nJO\xC3O DUTRA - Game design\nTHIEGO ALBUQUERQUE - arte 3D\nARTHUR
-    GABRIEL SILVA - SonoplastIA"
+    GABRIEL SILVA - SonoplastIA\nAssets:\nQuickOutline-Chris Nolet \nEnvironment
+    Pack: Free Forest Sample-Supercyan\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6bf688c89096485439d35f9606b28b7e, type: 2}
   m_sharedMaterial: {fileID: -3027455533822100937, guid: 6bf688c89096485439d35f9606b28b7e, type: 2}
@@ -1022,8 +1023,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27
-  m_fontSizeBase: 27
+  m_fontSize: 23.82
+  m_fontSizeBase: 23.82
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1060,7 +1061,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -73.82065, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1905,14 +1906,14 @@ RectTransform:
   m_GameObject: {fileID: 855080662}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.9369974, y: 2.9369974, z: 2.9369974}
+  m_LocalScale: {x: 2.7313285, y: 2.3729477, z: 2.9369974}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 855289678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000015259, y: 105.8}
+  m_AnchoredPosition: {x: 0.000015259, y: 118.3}
   m_SizeDelta: {x: 41.0385, y: 16.2458}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &855080664
@@ -2041,7 +2042,7 @@ RectTransform:
   m_GameObject: {fileID: 855289677}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.1909171, y: 1.1909171, z: 1.1909171}
+  m_LocalScale: {x: 1.2805932, y: 1.4739981, z: 1.1909171}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 855080663}
@@ -3297,7 +3298,7 @@ RectTransform:
   m_GameObject: {fileID: 1423137226}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.92997307, y: 0.8079502, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 547237488}
@@ -3305,7 +3306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 177.9, y: -105.8}
+  m_AnchoredPosition: {x: 191, y: -117}
   m_SizeDelta: {x: 122.3609, y: 47.3796}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1423137228
