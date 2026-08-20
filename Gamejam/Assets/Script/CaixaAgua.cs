@@ -11,6 +11,8 @@ public class CaixaAgua : MonoBehaviour
 
     private ArmaAgua armaDoJogador;
 
+    private bool podeRecarregar = false;
+
     private void Start()
     {
         mensagemRecarregar.SetActive(false);
@@ -22,7 +24,9 @@ public class CaixaAgua : MonoBehaviour
     {
         VerificarOlhar();
 
-        if (armaDoJogador != null && Input.GetKey(KeyCode.R))
+        if (podeRecarregar &&
+            armaDoJogador != null &&
+            Input.GetKey(KeyCode.R))
         {
             armaDoJogador.RecarregarAgua();
         }
@@ -30,16 +34,22 @@ public class CaixaAgua : MonoBehaviour
 
     private void VerificarOlhar()
     {
+        podeRecarregar = false;
+
         Ray ray = new Ray(
             cameraJogador.transform.position,
             cameraJogador.transform.forward
         );
 
-        if (Physics.Raycast(ray, out RaycastHit hit, distanciaInteracao))
+        if (Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            distanciaInteracao))
         {
             if (hit.collider.transform.IsChildOf(transform) ||
                 hit.collider.gameObject == gameObject)
             {
+                podeRecarregar = true;
                 mensagemRecarregar.SetActive(true);
                 return;
             }
